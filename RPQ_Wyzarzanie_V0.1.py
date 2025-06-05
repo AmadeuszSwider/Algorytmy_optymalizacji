@@ -3,6 +3,8 @@ import heapq
 import matplotlib.pyplot as plt
 import math
 import copy
+import time
+import csv
 class Task:
     def __init__(self, idx, r, p, q):
         self.idx = idx
@@ -47,6 +49,36 @@ if __name__ == "__main__":
     ax.grid(True)
     plt.tight_layout()
     plt.show()
+
+def visualize_results(csv_file='wyniki_symulowanego_wyzarzania.csv'):
+    import pandas as pd
+    import seaborn as sns
+
+    df = pd.read_csv(csv_file)
+
+    plt.figure(figsize=(12, 6))
+    sns.lineplot(data=df, x='T_init', y='Cmax', hue='alpha', style='max_iter', markers=True, dashes=False)
+    plt.title("Wpływ parametrów SA na Cmax")
+    plt.xlabel("Temperatura początkowa (T_init)")
+    plt.ylabel("Cmax")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+    plt.figure(figsize=(12, 6))
+    sns.lineplot(data=df, x='T_init', y='Czas', hue='alpha', style='max_iter', markers=True, dashes=False)
+    plt.title("Wpływ parametrów SA na czas wykonania")
+    plt.xlabel("Temperatura początkowa (T_init)")
+    plt.ylabel("Czas [s]")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+# To visualize results from CSV, uncomment and run:
+# visualize_results()
+
+# Make sure to have installed pandas and seaborn libraries:
+# pip install pandas seaborn
 
 def calculate_cmax_order(tasks_order):
     S = [0] * len(tasks_order)
@@ -102,3 +134,29 @@ if __name__ == "__main__":
     ax.grid(True)
     plt.tight_layout()
     plt.show()
+
+
+# Eksperymenty z parametrami symulowanego wyżarzania
+def run_experiments():
+    param_grid = {
+        'T_init': [10, 100, 1000, 10000],
+        'alpha': [0.85, 0.90, 0.95],
+        'max_iter': [100, 500, 1000]
+    }
+
+    with open('wyniki_symulowanego_wyzarzania.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Z', 'T_init', 'alpha', 'max_iter', 'Cmax', 'Czas'])
+
+        for Z in [1, 42, 123]:
+            for T_init in param_grid['T_init']:
+                for alpha in param_grid['alpha']:
+                    for max_iter in param_grid['max_iter']:
+                        tasks = generate_instance(n=20, Z=Z)
+                        start_time = time.time()
+                        solution, cmax = simulated_annealing(tasks, T_init=T_init, alpha=alpha, max_iter=max_iter)
+                        elapsed_time = time.time() - start_time
+                        writer.writerow([Z, T_init, alpha, max_iter, cmax, elapsed_time])
+
+# Odkomentuj poniższą linię, aby uruchomić badania:
+run_experiments()
