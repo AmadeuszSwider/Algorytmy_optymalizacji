@@ -152,7 +152,7 @@ def run_experiments():
         writer = csv.writer(csvfile)
         writer.writerow(['Z', 'T_init', 'alpha', 'max_iter', 'Cmax', 'Czas'])
 
-        for Z in [1, 42, 123]:
+        for Z in [1, 42, 69]:
             for T_init in param_grid['T_init']:
                 for alpha in param_grid['alpha']:
                     for max_iter in param_grid['max_iter']:
