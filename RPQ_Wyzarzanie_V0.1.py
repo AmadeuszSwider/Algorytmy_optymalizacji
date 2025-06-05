@@ -74,11 +74,11 @@ def visualize_results(csv_file='wyniki_symulowanego_wyzarzania.csv'):
     plt.tight_layout()
     plt.show()
 
-# To visualize results from CSV, uncomment and run:
-# visualize_results()
 
-# Make sure to have installed pandas and seaborn libraries:
-# pip install pandas seaborn
+visualize_results()
+
+
+
 
 def calculate_cmax_order(tasks_order):
     S = [0] * len(tasks_order)
@@ -158,5 +158,4 @@ def run_experiments():
                         elapsed_time = time.time() - start_time
                         writer.writerow([Z, T_init, alpha, max_iter, cmax, elapsed_time])
 
-# Odkomentuj poniższą linię, aby uruchomić badania:
 run_experiments()
