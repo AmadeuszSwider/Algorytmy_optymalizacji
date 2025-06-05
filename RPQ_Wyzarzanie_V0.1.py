@@ -55,9 +55,11 @@ def visualize_results(csv_file='wyniki_symulowanego_wyzarzania.csv'):
     import seaborn as sns
 
     df = pd.read_csv(csv_file)
+    df['alpha'] = df['alpha'].astype(str)
+    df['max_iter'] = df['max_iter'].astype(str)
 
     plt.figure(figsize=(12, 6))
-    sns.lineplot(data=df, x='T_init', y='Cmax', hue='alpha', style='max_iter', markers=True, dashes=False)
+    sns.lineplot(data=df, x='T_init', y='Cmax', hue='alpha', style='max_iter', markers=True, dashes=False, palette="tab10")
     plt.title("Wpływ parametrów SA na Cmax")
     plt.xlabel("Temperatura początkowa (T_init)")
     plt.ylabel("Cmax")
@@ -66,7 +68,7 @@ def visualize_results(csv_file='wyniki_symulowanego_wyzarzania.csv'):
     plt.show()
 
     plt.figure(figsize=(12, 6))
-    sns.lineplot(data=df, x='T_init', y='Czas', hue='alpha', style='max_iter', markers=True, dashes=False)
+    sns.lineplot(data=df, x='T_init', y='Czas', hue='alpha', style='max_iter', markers=True, dashes=False, palette="tab10")
     plt.title("Wpływ parametrów SA na czas wykonania")
     plt.xlabel("Temperatura początkowa (T_init)")
     plt.ylabel("Czas [s]")
@@ -75,7 +77,6 @@ def visualize_results(csv_file='wyniki_symulowanego_wyzarzania.csv'):
     plt.show()
 
 
-visualize_results()
 
 
 
@@ -115,6 +116,9 @@ def simulated_annealing(tasks, T_init=1000, alpha=0.95, stopping_T=1e-3, max_ite
 
 if __name__ == "__main__":
     tasks = generate_instance(n=6, Z=42)
+    print("Wygenerowane zadania:")
+    for task in tasks:
+        print(f"Zadanie {task.idx}: r={task.r}, p={task.p}, q={task.q}")
     final_order, final_cmax = simulated_annealing(tasks)
     print("Najlepsza kolejność:", [task.idx for task in final_order])
     print("Cmax:", final_cmax)
@@ -159,3 +163,4 @@ def run_experiments():
                         writer.writerow([Z, T_init, alpha, max_iter, cmax, elapsed_time])
 
 run_experiments()
+visualize_results()
